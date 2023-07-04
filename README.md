@@ -97,6 +97,9 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
+Environment="MQTT_IP=192.168.1.2"
+Environment="MQTT_AUTH={'username':\"my_username\", 'password':\"my_password\"}"
+Environment="TILT_CAL_YELLOW={'sg':0.024, 'temp':0.0}"
 ExecStart=/usr/bin/python3 <PATH TO YOUR FILE>/raptpill2mqtt.py
 StandardInput=tty-force
 
@@ -104,10 +107,22 @@ StandardInput=tty-force
 WantedBy=multi-user.target
 ```
 
-Remember to change the PATH variable in the script above. Then update your service,
+Remember to update MQTT_IP, my_username, my_password, calibration constants and change the PATH variable in the script above. Then update your service,
 
 ```
 sudo systemctl reload-daemon
+```
+
+OR
+
+```
+sudo systemctl --system daemon-reload
+```
+
+Will also need to enable and start the service:
+```
+sudo systemctl enable raptpill2mqtt
+sudo systemctl start raptpill2mqtt
 ```
 
 <a name="intwithhass"/>
