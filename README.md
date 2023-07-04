@@ -63,13 +63,13 @@ The code should now listen for your RAPT Pill device and report values on the MQ
 You can use the mosquitto commandline tool (on Linux) to listen for colors or the build-in MQTT client in Home Assistant,
 
 ```bash
-mosquitto_sub -t 'rapt-pill/#'
+mosquitto_sub -t 'rapt/pill/#'
 ```
 
 To listen for measurements only from Orange devices run,
 
 ```bash
-mosquitto_sub -t 'rapt-pill/Orange/#'
+mosquitto_sub -t 'rapt/pill/Orange/#'
 ```
 
 If your MQTT server is not running on the localhost you can set the following environmental variables,
@@ -134,13 +134,13 @@ Using the MQTT sensor in home assistant you can now listen for new values and cr
 ```yaml
   - platform: mqtt
     name: "RAPT Pill Orange - Temperature"
-    state_topic: "rapt-pill/Orange"
+    state_topic: "rapt/pill/Orange"
     value_template: "{{ value_json.temperature_celsius_uncali | float + 0.5 | float | round(2) }}"
     unit_of_measurement: "\u2103"
 
   - platform: mqtt
     name: "RAPT Pill Orange - Gravity"
-    state_topic: "rapt-pill/Orange"
+    state_topic: "rapt/pill/Orange"
     value_template: "{{ value_json.specific_gravity_uncali | float + 0.002 | float | round(3) }}"
 ```
 

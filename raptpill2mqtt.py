@@ -87,16 +87,8 @@ TILTS = {
 }
 
 calibration = {
-        'Red'    : literal_eval(os.getenv('TILT_CAL_RED', "None")),
-        'Green'  : literal_eval(os.getenv('TILT_CAL_GREEN', "None")),
-        'Black'  : literal_eval(os.getenv('TILT_CAL_BLACK', "None")),
-        'Purple' : literal_eval(os.getenv('TILT_CAL_PURPLE', "None")),
-        'Orange' : literal_eval(os.getenv('TILT_CAL_ORANGE', "None")),
-        'Blue'   : literal_eval(os.getenv('TILT_CAL_BLUE', "None")),
-        'Yellow' : literal_eval(os.getenv('TILT_CAL_YELLOW', "None")),
-        'Pink'   : literal_eval(os.getenv('TILT_CAL_PINK', "None")),
-        'RAPT Yellow' : literal_eval(os.getenv('TILT_CAL_YELLOW', "None")),
-        'unknown': literal_eval(os.getenv('TILT_UNKNOWN', "None")),
+        'Yellow' : literal_eval(os.getenv('RAPT_CAL_YELLOW', "None")),
+        'unknown': literal_eval(os.getenv('RAPT_CAL_UNKNOWN', "None")),
 }
 #@@@#LOG.info("TILT Blue Calibration: {}".format(calibration['Blue']))
 
@@ -116,7 +108,9 @@ def on_advertisement(advertisement):
     """
 
     msgs = []
-    color = "unknown"
+    #@@@#color = "unknown"
+    # @@@ Until get ID identifying code working, force to the only color I have
+    color = "Yellow"
 
     if advertisement.mfg_data is not None:
         rssi = advertisement.rssi
@@ -182,7 +176,7 @@ def on_advertisement(advertisement):
                                 "temperature_farenheit_"+suffix: "{:.1f}".format(temperatureF),
                                 "battery": "{:.1f}".format(battery),
                                 "rssi": "{:d}".format(rssi),
-                                "time": datetime.now().strftime("%b %d %Y %H:%M:%S"),
+                                "lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
                             }
 
                         else:
@@ -197,7 +191,7 @@ def on_advertisement(advertisement):
                             }
 
                         # Create message                                        QoS   Retain message
-                        msgs.append(("rapt-pill/{}".format(color), json.dumps(mqttdata), 2,    1))
+                        msgs.append(("rapt/pill/{}".format(color), json.dumps(mqttdata), 2,    1))
 
                         # Send message via MQTT server
                         publish.multiple(msgs, hostname=config['host'], port=config['port'], auth=config['auth'], protocol=4)
