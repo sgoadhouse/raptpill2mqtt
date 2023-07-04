@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Wrapper for reading messages from RAPT Pill wireless hydrometer and forwarding them to MQTT topics. 
 
-The device is a iBluetooth Low Energy (BLE) device that sends out a
+The device is a Bluetooth Low Energy (BLE) device that sends out a
 set of 6 advertisements for every interval as set in the Pill.
 
-Details of data format can be found here:
+The code is roughly based on tilt2mqtt.py
+
+Details of RAPT Pill data format can be found here:
 https://gitlab.com/rapt.io/public/-/wikis/Pill-Hydrometer-Bluetooth-Transmissions
 
 The raw values read from the RAPT Pill are (possibly) uncalibrated and should be calibrated before use. The script works a follows,
