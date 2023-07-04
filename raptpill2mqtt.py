@@ -173,10 +173,11 @@ def on_advertisement(advertisement):
                                 "specific_gravity_"+suffix: "{:.4f}".format(specific_gravity),
                                 "specific_gravity_pts_per_day_"+suffix: "{:.1f}".format(gravity_velocity),
                                 "temperature_celsius_"+suffix: "{:.2f}".format(temperatureC),
-                                "temperature_farenheit_"+suffix: "{:.1f}".format(temperatureF),
+                                "temperature_fahrenheit_"+suffix: "{:.1f}".format(temperatureF),
                                 "battery": "{:.1f}".format(battery),
                                 "rssi": "{:d}".format(rssi),
-                                "lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
+                                #@@@#"lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
+                                "lastActivityTime": "{}".format(datetime.now()),
                             }
 
                         else:
@@ -184,10 +185,11 @@ def on_advertisement(advertisement):
                             mqttdata = {
                                 "specific_gravity_"+suffix: "{:.4f}".format(specific_gravity),
                                 "temperature_celsius_"+suffix: "{:.2f}".format(temperatureC),
-                                "temperature_farenheit_"+suffix: "{:.1f}".format(temperatureF),
+                                "temperature_fahrenheit_"+suffix: "{:.1f}".format(temperatureF),
                                 "battery": "{:.1f}".format(battery),
                                 "rssi": "{:d}".format(rssi),
-                                "time": datetime.now().strftime("%b %d %Y %H:%M:%S"),
+                                #@@@#"lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
+                                "lastActivityTime": "{}".format(datetime.now()),
                             }
 
                         # Create message                                        QoS   Retain message
