@@ -107,7 +107,6 @@ def on_advertisement(advertisement):
     """Message recieved from RAPT Pill
     """
 
-    msgs = []
     #@@@#color = "unknown"
     # @@@ Until get ID identifying code working, force to the only color I have
     color = "Yellow"
@@ -168,7 +167,8 @@ def on_advertisement(advertisement):
                         LOG.error("INVALID FORMAT for RAPT Pill Data:", advertisement.mfg_data)
                     else:
                         if gravity_velocity_valid == 1:
-                            LOG.info("Pill: {}  Gravity: {:.4f} (Pts/Day: {:.1f}) Temp: {:.1f}C/{:.1f}F Battery: {:.1f}% RSSI: {}".format(address.address, specific_gravity, gravity_velocity, temperatureC, temperatureF, battery, rssi))
+                            now = datetime.now()
+                            LOG.info("Pill: {}  Gravity: {:.4f} (Pts/Day: {:.1f}) Temp: {:.1f}C/{:.1f}F Battery: {:.1f}% RSSI: {} Now: {}".format(address.address, specific_gravity, gravity_velocity, temperatureC, temperatureF, battery, rssi, now))
                             mqttdata = {
                                 "specific_gravity_"+suffix: "{:.4f}".format(specific_gravity),
                                 "specific_gravity_pts_per_day_"+suffix: "{:.1f}".format(gravity_velocity),
@@ -177,11 +177,12 @@ def on_advertisement(advertisement):
                                 "battery": "{:.1f}".format(battery),
                                 "rssi": "{:d}".format(rssi),
                                 #@@@#"lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
-                                "lastActivityTime": "{}".format(datetime.now()),
+                                "lastActivityTime": "{}".format(now),
                             }
 
                         else:
-                            LOG.info("Pill: {}  Gravity: {:.4f} Temp: {:.1f}C/{:.1f}F Battery: {:.1f}% RSSI: {}".format(address.address, specific_gravity, temperatureC, temperatureF, battery, rssi))
+                            now = datetime.now()
+                            LOG.info("Pill: {}  Gravity: {:.4f} Temp: {:.1f}C/{:.1f}F Battery: {:.1f}% RSSI: {} Now: {}".format(address.address, specific_gravity, temperatureC, temperatureF, battery, rssi, now))
                             mqttdata = {
                                 "specific_gravity_"+suffix: "{:.4f}".format(specific_gravity),
                                 "temperature_celsius_"+suffix: "{:.2f}".format(temperatureC),
@@ -189,14 +190,12 @@ def on_advertisement(advertisement):
                                 "battery": "{:.1f}".format(battery),
                                 "rssi": "{:d}".format(rssi),
                                 #@@@#"lastActivityTime": datetime.now().strftime("%b %d %Y %H:%M:%S"),
-                                "lastActivityTime": "{}".format(datetime.now()),
+                                "lastActivityTime": "{}".format(now),
                             }
 
-                        # Create message                                        QoS   Retain message
-                        msgs.append(("rapt/pill/{}".format(color), json.dumps(mqttdata), 2,    1))
-
                         # Send message via MQTT server
-                        publish.multiple(msgs, hostname=config['host'], port=config['port'], auth=config['auth'], protocol=4)
+                        publish.single("rapt/pill/{}".format(color), payload=json.dumps(mqttdata), qos=0, retain=True,
+                                       hostname=config['host'], port=config['port'], auth=config['auth'])
                 except KeyError:
                     LOG.error("Device does not look like a RAPT Pill Hydrometer.")
 
